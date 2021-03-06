@@ -78,5 +78,73 @@ public class basics{
         }
         vis[src]=false;
     }
+    /// shortestPathBinaryMatrix
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        int n=grid.length;
+        int m=grid[0].length;
+        
+        if(grid[0][0]==1||grid[n-1][m-1]==1) return -1;
+        int[][] dir={{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
 
+        LinkedList<Integer> que=new LinkedList<>();
+        que.addLast(0);//0*m+n;
+        grid[0][0]=1;
+        int level=1;
+        while(que.size()>0){
+            int size=que.size();
+            while(size-->0){
+                int idx=que.removeFirst();
+                int r=idx/m;
+                int c=idx%m;
+                if(r==m-1&&c==n-1) return level;
+                for(int d=0;d<8;d++){
+                    int x=r+dir[d][0];
+                    int y=c+dir[d][1];
+                    if(x>=0&&y>=0&&x<n&&y<m&&grid[x][y]==0){
+                        grid[x][y]=1;
+                        que.addLast(x*m+y);//0*m+n;
+                    }
+                }
+            }
+            level++;
+        }
+        return -1;
+    }
+    //
+    public boolean isBipartite_(int[][] graph, int[] vis, int src){
+        LinkedList<Integer> que=new LinkedList<>();
+        que.addLast(src);
+        
+        int color=0;
+        while(que.size()>0){
+            int size=que.size();
+            while(size-->0){
+                int rem=que.getFirst();
+                if(vis[rem]!=-1){
+                    if(vis[rem]!=color) return false;
+                    continue;
+                }
+                vis[rem]=color;
+                for(int e:graph[rem]){
+                    if(vis[e]==-1){
+                    que.addLast(e);
+                    } 
+                }
+            }
+           color=(color+1)%2;
+        }
+        return true;
+    }
+    public boolean isBipartite(int[][] graph) {
+     int N=graph.length;
+     boolean res=true;
+     int[] vis=new int[N];
+     Arrays.fill(vis,-1);
+     for(int i=0;i<N;i++){
+       if(vis[i] == -1 && !isBipartite_(graph,vis,i)){
+             return false;
+       }
+     }
+    return true;
+    }
 }
