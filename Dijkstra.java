@@ -1,15 +1,5 @@
 public class dijkstra{
-    static class Edge {
-        int src;
-        int nbr;
-        int wt;
-
-        Edge(int src, int nbr, int wt) {
-            this.src = src;
-            this.nbr = nbr;
-            this.wt = wt;
-        }
-    }
+    
     public static class Pair implements Comparable < Pair > {
         int v;
         String psf;
