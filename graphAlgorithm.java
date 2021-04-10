@@ -1,4 +1,4 @@
-public class topological_sort{
+public class graphAlgorithm{
     static class Edge {
         int src;
         int nbr;
@@ -48,17 +48,17 @@ public class topological_sort{
     }
     // kahan Algorithm
     public static void kahanAlgo(ArrayList < Edge > [] graph){
-        int[] inorder=new int[N];
+        int[] indegree=new int[N];
         for(int i=0;i<n;i++){
             for(Edge e:graph[i]){
-                inorder[e.v]++;
+                indegree[e.v]++;
             }
         }
 
         LinkedList<Integer> que=new LinkedList<>();
         ArrayList<Integer> ans=new ArrayList<>();
         for(int i=0;i<N;i++){
-            if(inorder[i]==0){
+            if(indegree[i]==0){
                 que.addLast(i);
             }
         }
@@ -69,7 +69,7 @@ public class topological_sort{
              int rem=que.removeFirst();
              ans.add(rem);
              for(Edge e:graph[rem]){
-              if(--inorder[e.v]==0){
+              if(--indegree[e.v]==0){
                   que.addLast(e.v);
               }
              }
@@ -119,7 +119,7 @@ public class topological_sort{
         return kahanAlgo(numCourses,prerequisites);
     }
      
-    // course sechedule
+    // course sechedule ii
     public static List kahanAlgo(int N, int[][] prerequisites){
         List<Integer>[] graph = new ArrayList[N];
         for(int i = 0; i < N; i++) {
@@ -163,5 +163,53 @@ public class topological_sort{
           res[i]=ans.get(i);
         }
         return res;
+    }
+
+    /// lomgest increasing path 
+    int[][] dir={{1,0},{-1,0},{0,1},{0,-1}};
+    public int longestIncreasingPath(int[][] matrix) {
+        if(matrix.length==0||matrix[0].length==0) return 0;
+        int n=matrix.length;
+        int m=matrix[0].length;
+        int[][] indegree=new int[n][m];
+        
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                for(int d=0;d<4;d++){
+                    int r=i+dir[d][0];
+                    int c=j+dir[d][1];
+                    if(r>=0&&r<n&&c>=0&&c<m&&matrix[r][c]>matrix[i][j]){
+                           indegree[r][c]++;
+                    }
+                }
+            }
+        }
+        LinkedList<Integer> que=new LinkedList<>();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(indegree[i][j]==0){
+                    que.addLast(i*m+j);
+                }
+            }
+        }
+        int level=0;
+        while(que.size()>0){
+            int size=que.size();
+            while(size-->0){
+                int idx=que.removeFirst();
+                int r=idx/m;
+                int c=idx%m;
+                for(int d=0;d<4;d++){
+                    int x=r+dir[d][0];
+                    int y=c+dir[d][1];
+                    if(x>=0&&y>=0&&x<n&&y<m&&matrix[x][y]>matrix[r][c]&&--indegree[x][y]==0){
+                            que.addLast(x*m+y);
+                    }
+                }
+            }
+            level++;
+        }
+        
+        return level;
     }
 }
