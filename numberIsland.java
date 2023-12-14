@@ -63,5 +63,53 @@ public class numberIsland{
         }    
           return  count*4-nbr;
     }
-    
+
+    public int numberOfIsland2(int m, int n, int[][] positions){
+    int[] par = new int[n*m];
+    int[] rank = new int[n*m];
+    Arrays.fill(-1);
+    int count = 0;
+    int[][] dir = {{1,0},{-1,0},{0,1},{0,-1}};
+
+    for(int i=0;i<positions.length;i++){
+        int r = position[i][0];
+        int c = position[i][1];
+         int cellNo = r*n+c;
+        if(par[cellNp]!=-1) continue;
+        par[cellNo]=cellNo;
+        rank[cellNo]=1;
+        count ++;
+        for(int k=0;k<4;k++){
+            int nr = dir[k][0]+r;
+            int nc = dir[k][1]+c;
+            int cellPar = nr*4+nc;
+            if(nr<0 || nc<0 || nr>m || nc>n || par[cellPar]==-1){
+                continue;
+            }
+            int loCell = find(cellNo, par);
+            int loPar = find(cellPar, par);
+            if(loCell!=loPar){
+                if(rank[loPar]>rank[loCell]) {
+                    par[loCell]= loPar;
+                    }
+                else if(rank[loPar]<rank[loCell]) {
+                    par[loPar]= loCell;
+                    }
+                else{
+                    par[loPar]=loCell;
+                    rank[loCell]++;
+                }
+                count--;
+            }
+        }
+    }
 }
+
+    public int find(int x, int[] par){
+        if(par[x]==x) return x;
+        return find(par[x],par);
+    }
+}
+
+
+    
